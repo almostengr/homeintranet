@@ -1,0 +1,19 @@
+<?php
+
+function myhouse_menu() {
+  $aItems = array();
+
+  return $aItems;
+} 
+
+function myhouseissue_create_node_api() {
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // process the request if it post
+    
+    $cNewTicket = new stdClass();
+    $cNewTicket->type = "issue";
+    $cNewTicket->title = trim($_POST['sum']);
+    $cNewTicket->uid = 1;
+  } // end if 
+} // end function 
+

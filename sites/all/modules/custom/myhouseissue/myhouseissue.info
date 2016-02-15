@@ -1,0 +1,9 @@
+name=MyHouse Issue
+description=Additional functionality for the issue tracker.
+package=myhouse.lan
+core=7.x
+version=7.x-1.0
+
+files[] = myhouseintranet.install
+files[] = myhouseintranet.module
+
