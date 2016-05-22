@@ -1,0 +1,12 @@
+name=DCH Custom
+description=Custom module for processing.
+core=7.x
+version=7.x-0.01
+package=Bit Second Tech
+
+dependencies[]=uc_order
+dependencies[]=uc_product
+dependencies[]=uc_store
+
+files[]=dchcustom.module
+
