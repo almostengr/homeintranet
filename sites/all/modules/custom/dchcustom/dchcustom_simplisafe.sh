@@ -1,36 +1,56 @@
 #!/bin/bash 
 
+function log_msg {
+# LOG MESSAGES TO THE LOG FILE
+	echo $(date)" | "$1
+} # end function
+
 function get_status {
+	AUTHKEY="EwXPMZR9Df0oS2KkvOFPWA"
+	log_msg "Getting the status" 
+
 	# run the script to get the status
-	SSSTATUS=$(perl /var/www/intranet.matrixneo.ddns.net/SimpliSafeStatus/simplisafe_status.pl)
+	SSSTATUS=$(perl /var/www/intranet.matrixneo.ddns.net/private/SimpliSafeStatus/simplisafe_status.pl)
 
+	JSONSTRING='{"title":"iot_simplisafe:'"${SSSTATUS}"'","nid":"469","api-key":"'"${AUTHKEY}"'"}'
+
+	echo $JSONSTRING
+
+        # curl -H "Content-Type: application/json" -X PUT -d ${JSONSTRING} http://intranet.myhouse.lan/?q=security/node/469.json
 	# update Drupal with the appropriate status
-	if [ "${SSSTATUS}" == "Home" ]; then
-		curl -H "Content-Type: application/json" -X PUT -d '{"title":"iot_simplisafe:Home","nid":"469"}' http://intranet.matrixneo.ddns.net?q=iot/node/469.json
-	elif [ "${SSSTATUS}" == "Away" ]; then
-                curl -H "Content-Type: application/json" -X PUT -d '{"title":"iot_simplisafe:Away","nid":"469"}' http://intranet.matrixneo.ddns.net?q=iot/node/469.json
-	elif [ "${SSSTATUS}" == "Off" ]; then
-                curl -H "Content-Type: application/json" -X PUT -d '{"title":"iot_simplisafe:Off","nid":"469"}' http://intranet.matrixneo.ddns.net?q=iot/node/469.json
-	else
-                curl -H "Content-Type: application/json" -X PUT -d '{"title":"iot_simplisafe:Away","nid":"469"}' http://intranet.matrixneo.ddns.net?q=iot/node/469.json
-		cat "Error occurred when determining Alarm Status. Assuming Away." | mailx -s "IOT Error" 2053835510\@mms.att.net kjrobin04\@yahoo.com
 
-		# generate ticket
-		
-		# If error occurs, then sleep for 1 hour	
-		sleep 3600
-	fi
+	log_msg "Writing feed file"
+	echo "469,security "${SSSTATUS} > /var/www/intranet.matrixneo.ddns.net/private/feeds/iotvariable/security.csv
+	log_msg "Done writing feed file"
+
+	log_msg "Feed file contents"
+	cat /var/www/intranet.matrixneo.ddns.net/private/feeds/iotvariable/security.csv
+	log_msg "Done feed file contents"
+
+        log_msg ""
+	log_msg "Status is: "${SSSTATUS}
+	log_msg "Done getting the status"
+} # end function
+
+# Perform cleanup of files after run
+function perform_cleanup {
+	log_msg "Performing cleanup"
+
+	rm /tmp/cookie.txt
+	rm /tmp/sscookie.txt
+	
+	log_msg "Done performing cleanup"
 } # end function
 
 function main {
-	date
+	log_msg "Running script" 
+
 	check_previous_run
 	# get_status
 
-	# cleanup after logout 
-	rm /tmp/sscookie.txt
+	perform_cleanup
 
-	date
+	log_msg "Done running script"
 } # end function 
 
 function check_previous_run {
@@ -46,6 +66,6 @@ function check_previous_run {
 	fi
 } # end function
 
+# call main function
 main
-p
 

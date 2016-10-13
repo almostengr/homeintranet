@@ -1,0 +1,6 @@
+name = DCH Internet Speed 2 
+package = Drupal Connected Home
+core = 7.x 
+version = 7.x-1.1
+
+files[] = dchcustom_inetspeed2.module

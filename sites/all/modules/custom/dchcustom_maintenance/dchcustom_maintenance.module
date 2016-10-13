@@ -1,0 +1,22 @@
+<?php 
+
+/**
+ * 
+ * Implements hook_cron
+ */
+function dchcustom_maintenance_cron() {
+  // if the current time is Wendesday, between 2:55 AM and 3:15 AM, then place the site in maintenance mode
+  if ( date('w') == 3 && 
+      (date('G') == 02 && date('i') >= 55) && 
+      (date('G') == 03 && date('i') <= 15)) {
+    // turn on maintenance mode 
+    variable_set('maintenance_mode', 1);
+    watchdog('dchcustom_maintenance', 'Maintenance mode enabled', array(), WATCHDOG_NOTICE, NULL);
+  } // end if
+  else{
+    // turn off maintenance mode
+    variable_set('maintenance_mode', 0);
+    watchdog('dchcustom_maintenance', 'Maintenance mode disabled', array(), WATCHDOG_NOTICE, NULL);
+  } // end else
+} // end function
+

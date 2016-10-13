@@ -281,7 +281,7 @@ $drupal_hash_salt = 'UqgkVdFrGekbSWHDh4QCgRaZjcb23OeL-C_LzLKOXbU';
  * for you.
  */
 # $base_url = 'http://www.example.com';  // NO trailing slash!
-$base_url = 'http://intranet.myhouse.lan';
+# $base_url = 'http://drifttt.myhouse.lan';
 
 /**
  * PHP settings:
@@ -340,7 +340,6 @@ ini_set('session.cookie_lifetime', 0);
  * with a leading dot, as per RFC 2109.
  */
 # $cookie_domain = '.example.com';
-$cookie_domain = '.myhouse.lan';
 
 /**
  * Variable overrides:
@@ -359,9 +358,9 @@ $cookie_domain = '.myhouse.lan';
  * - anonymous: Defines the human-readable name of anonymous users.
  * Remove the leading hash signs to enable.
  */
-# $conf['site_name'] = 'My Drupal site';
+$conf['site_name'] = 'DrIFTTT';
 # $conf['theme_default'] = 'garland';
-# $conf['anonymous'] = 'Visitor';
+$conf['anonymous'] = 'Visitor';
 
 /**
  * A custom theme can be set for the offline page. This applies when the site
@@ -371,7 +370,7 @@ $cookie_domain = '.myhouse.lan';
  * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.
  * Note: This setting does not apply to installation and update pages.
  */
-# $conf['maintenance_theme'] = 'bartik';
+$conf['maintenance_theme'] = 'bartik';
 
 /**
  * Reverse Proxy Configuration:
@@ -540,7 +539,7 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
  * above. Make sure that you understand the effects of this feature before
  * uncommenting the line below.
  */
-# drupal_fast_404();
+drupal_fast_404();
 
 /**
  * External access proxy settings:

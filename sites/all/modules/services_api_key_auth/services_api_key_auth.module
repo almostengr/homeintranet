@@ -22,10 +22,21 @@ function services_api_key_auth_services_authentication_info() {
 function services_api_key_auth_services_authenticate() {
   // Get function arguments.
   $args = func_get_args();
+
   // Get the key from the request.
-  $api_key = (!empty($_REQUEST['api-key'])) ? $_REQUEST['api-key'] : '';
+  $api_key = '';
+  switch ($args[0]['api_key_source']) {
+    case 'request':
+      $api_key = empty($_REQUEST['api-key']) ? '' : $_REQUEST['api-key'];
+      break;
+
+    case 'header':
+      $api_key = empty($_SERVER['HTTP_API_KEY']) ? '' : $_SERVER['HTTP_API_KEY'];
+      break;
+  }
+
   // Validate request.
-  $valid = (services_api_key_auth_compare_key($api_key, $args[0]['api_key'])) ? TRUE : FALSE;
+  $valid = (bool) services_api_key_auth_compare_key($api_key, $args[0]['api_key']);
   // Allow other modules to have their say.
   drupal_alter('services_api_key_valid', $valid, $args);
   if ($valid) {
@@ -56,10 +67,7 @@ function services_api_key_auth_services_settings_form($settings) {
   $form = array();
 
   // Generate an API key for the user.
-  $key = services_api_key_auth_generate_key();
-  if ($key === FALSE) {
-    $key = '';
-  }
+  $key = drupal_random_key(16);
 
   // Text field for api key.
   $form['api_key'] = array(
@@ -70,6 +78,25 @@ function services_api_key_auth_services_settings_form($settings) {
     )),
     '#default_value' => (!empty($settings['api_key'])) ? $settings['api_key'] : $key,
   );
+
+  // Define where we should look up of the API key value.
+  $form['api_key_source'] = array(
+    '#type' => 'select',
+    '#title' => t('API Key source'),
+    '#description' => t('Where the API key can be found, either in the request parameters or in the HTTP header. Note that the <a href="@href_php_net" target="_blank">@var_request</a> variable contains the contents of @var_get, @var_post and @var_cookie.', array(
+      '@href_php_net' => 'http://php.net/manual/en/reserved.variables.request.php',
+      '@var_request' => '$_REQUEST',
+      '@var_cookie' => '$_COOKIE',
+      '@var_post' => '$_POST',
+      '@var_get' => '$_GET',
+    )),
+    '#options' => array(
+      'request' => t('Request (@example)', array('@example' => "\$_REQUEST['api-key']")),
+      'header' => t('Header (@example)', array('@example' => "\$_SERVER['HTTP_API_KEY']")),
+    ),
+    '#default_value' => empty($settings['api_key_source']) ? 'request' : $settings['api_key_source'],
+  );
+
   // Get list of users with given role.
   $role = user_role_load_by_name(variable_get('service_api_key_role', 'administrator'));
   $query = 'SELECT DISTINCT(ur.uid) FROM {users_roles} AS ur WHERE ur.rid = :rids';
@@ -169,45 +196,4 @@ function services_api_key_auth_admin_settings() {
 function services_api_key_auth_admin_settings_submit($form, &$state) {
   variable_set('service_api_key_role', $state['values']['role']);
   drupal_set_message('Settings saved.');
-}
-
-/**
- * Generate a secure pseudo-random key.
- *
- * The function will generate a secure pseudo-random UUID for use as an API key.
- *
- * @return
- *   The generated key, or FALSE on the inability to generate one.
- */
-function services_api_key_auth_generate_key() {
-  // Set the number of random characters we'll need.
-  $num_chars = 16;
-
-  // Generate a random string of 16 characters as securely as possible. This is
-  // largely taken from http://stackoverflow.com/a/15875555/442022. Note that we
-  // can't use random_bytes() because that's only for PHP 7+.
-  if (function_exists('openssl_random_pseudo_bytes')) {
-    // The OpenSSL library is available so we can use its function.
-    $random_data = openssl_random_pseudo_bytes($num_chars);
-  }
-  else if (file_exists('/dev/urandom')) {
-    // As we don't have OpenSSL, grab random data from the pool on UNIX-like
-    // systems.
-    $random_data = file_get_contents('/dev/urandom', NULL, NULL, 0, $num_chars);
-  }
-  else {
-    // We're not on a UNIX-like system, and are missing the OpenSSL library.
-    // Report failure as this situation isn't supported.
-    drupal_set_message(t('As you have neither the OpenSSL library, nor a UNIX-like system, we were unable to generate a secure pseudo-random key for you.'), 'warning');
-    return FALSE;
-  }
-
-  // Set parts of the string to match the UUID specifications.
-  // Set version to 0100.
-  $random_data[6] = chr(ord($random_data[6]) & 0x0f | 0x40);
-  // Set bits 6-7 to 10.
-  $random_data[8] = chr(ord($random_data[8]) & 0x3f | 0x80);
-
-  // Format the string properly, and then return it.
-  return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($random_data), 4));
 }

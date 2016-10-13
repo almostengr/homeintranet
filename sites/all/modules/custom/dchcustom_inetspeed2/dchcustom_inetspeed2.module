@@ -1,0 +1,84 @@
+<?php
+
+function dchcustom_inetspeed2_get_files() {
+  $dir = "private:///feeds/inetspeed/*";
+  // $file_list = file_scan_directory($dir, '/./*.csv$/');
+  $file_list = scandir($dir);
+  
+  watchdog('dchcustom_inetspeed2', 'Scanned directory', array(), WATCHDOG_DEBUG, NULL);
+  watchdog('dchcustom_inetspeed2', $dir, array(), WATCHDOG_DEBUG, NULL);
+  watchdog('dchcustom_inetspeed2', $file_list, array(), WATCHDOG_DEBUG, NULL);
+
+  return $file_list;
+} // end function
+
+function dchcustom_inetspeed2_cron() {
+  module_load_include('inc', 'webform', 'includes/webform.submissions');
+
+  $files = dchcustom_inetspeed2_get_files();
+  // $form_state['delimiter'] = variable_get('dchcustom_inetspeed_delimiter', ';');
+  // $form_state['field_keys'] = variable_get('dchcustom_inetspeed_field_keys', 'form_key');
+  // $form_state['nid'] = 500;
+  $webform_nid = 500;
+  $load_num_files = 10;
+ 
+  for($i = 0; $i < $load_num_files; $i++) {
+    $row_count = 0;
+
+    watchdog('dchcustom_inetspeed2', 'File name: ' . $files[$i], array(), WATCHDOG_DEBUG, NULL);
+
+   //  $handle = fopen($files[$i], 'r');
+
+    while($row = fgetcsv($handle, 999, ';')) {
+      $csv_values = array();
+      
+      // dchcustom_inetspeed_import($form, $form_state, $cur_file);
+
+      if ($row_count != 0) {
+        // cid to csv mapping
+        // 3 server
+        // 4 time
+        // 5 server_ping
+        // 6 date
+        // 7 upload
+        // 8 download
+        // 9 from 
+        // 10 from_ip 
+        // 12 share_url
+        // 13 start
+        // 14 server_dist
+        // 15 stop  
+
+        $csv_values[13] = $row[0];
+        $csv_values[15] = $row[1];
+        $csv_values[9] = $row[2];
+        $csv_values[10] = $row[3];
+        $csv_values[3] = $row[4];
+        $csv_values[14] = $row[5];
+        $csv_values[5] = $row[6];
+        $csv_values[8] = $row[7];
+        $csv_values[7] = $row[8];
+        $csv_values[12] = $row[9];
+
+        // load the webform node 
+        $webform_node = node_load(intval($webform_nid));
+    
+        $submission = array(
+          'nid' => $webform_node->nid,
+          'uid' => $user->uid,
+          'submitted' => REQUEST_TIME,
+          'remote_addr' => ip_address(),
+          'is_draft' => 0,
+          'data' => webform_submission_data($webform_node, $csv_values),
+        );
+
+        // insert the submission to the database 
+        webform_submission_insert($webform_node, $submission);
+      } // end if 
+
+      // increment the row counter 
+      $row_count++;
+    } // end while
+  } // end for
+} // end function
+

@@ -1,0 +1,8 @@
+name = DCH Internet Speed Test 
+package = Drupal Connected Home
+description = Load the internet speed test results into the Drupal
+core = 7.x
+version = 7.x-1.0
+
+files[] = dchcustom_inetspeed.module
+files[] = dchcustom_inetspeed.install
