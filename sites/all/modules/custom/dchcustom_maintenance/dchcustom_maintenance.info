@@ -1,7 +1,0 @@
-name = DCH Maintenance
-package = Drupal Connected Home
-description = Check whether maintenance mode should be enabled. 
-core = 7.x
-version = 7.x-1.0
-
-files[] = dchcustom_maintenance.module
