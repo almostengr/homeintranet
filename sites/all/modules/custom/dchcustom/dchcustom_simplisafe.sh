@@ -10,7 +10,7 @@ function get_status {
 	log_msg "Getting the status" 
 
 	# run the script to get the status
-	SSSTATUS=$(perl /var/www/intranet.matrixneo.ddns.net/private/SimpliSafeStatus/simplisafe_status.pl)
+	SSSTATUS=$(perl /home/aphintranet/intranetp/SimpliSafeStatus/simplisafe_status.pl)
 
 	JSONSTRING='{"title":"iot_simplisafe:'"${SSSTATUS}"'","nid":"469","api-key":"'"${AUTHKEY}"'"}'
 
@@ -20,11 +20,11 @@ function get_status {
 	# update Drupal with the appropriate status
 
 	log_msg "Writing feed file"
-	echo "469,security "${SSSTATUS} > /var/www/intranet.matrixneo.ddns.net/private/feeds/iotvariable/security.csv
+	echo "469,security "${SSSTATUS} > /home/aphintranet/intranetp/feeds/iotvariable/security.csv
 	log_msg "Done writing feed file"
 
 	log_msg "Feed file contents"
-	cat /var/www/intranet.matrixneo.ddns.net/private/feeds/iotvariable/security.csv
+	cat /home/aphintranet/intranetp/feeds/iotvariable/security.csv
 	log_msg "Done feed file contents"
 
         log_msg ""
@@ -67,5 +67,5 @@ function check_previous_run {
 } # end function
 
 # call main function
-main
+main $*
 

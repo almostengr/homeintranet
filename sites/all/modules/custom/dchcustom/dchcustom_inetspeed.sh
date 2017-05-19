@@ -1,8 +1,9 @@
 #!/bin/bash 
 
-INTRANETDIR=/var/www/intranet.matrixneo.ddns.net
-SCRIPTDIR=${INTRANETDIR}/private/speedtest-cli
-FEEDDIR=${INTRANETDIR}/private/feeds/inetspeed
+INTRANETDIR=/home/aphintranet/intranet
+INTRANETPDIR=/home/aphintranet/intranetp
+SCRIPTDIR=${INTRANETPDIR}/speedtest-cli
+FEEDDIR=${INTRANETPDIR}/feeds/inetspeed
 FEEDFILE=${FEEDDIR}"/"$(date +%Y%m%d%H%M%S)".csv"
 
 # write the messages to the log
