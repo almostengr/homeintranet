@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Knowledge Base feature.
+ */
+
+include_once 'knowledge_base.features.inc';
