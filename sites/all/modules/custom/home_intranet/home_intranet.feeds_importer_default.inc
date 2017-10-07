@@ -100,7 +100,7 @@ function home_intranet_feeds_importer_default() {
         'directory' => 'private://feeds/inetspeed',
         'filemask' => '/\\.csv$/',
         'updated_files' => 1,
-        'after_processed' => '0',
+        'after_processed' => '1',
         'move_to_folder' => 'private://feeds/inetspeed/archive',
       ),
     ),
