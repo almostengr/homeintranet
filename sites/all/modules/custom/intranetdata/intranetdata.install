@@ -1,0 +1,38 @@
+<?php 
+/**
+ *
+ * Move the System Notification entity to a Node entity
+ */
+function intranetdata_update_7100() {
+
+
+  $query = "select * from {eck_system_notification}";
+  $result = db_query($query);
+  
+  foreach($result as $row) {
+    $node = new stdClass();
+    $node->type = 'system_notification';
+    node_object_prepare($node);
+
+    $node->created = $row->created;
+    $node->changed = $row->changed;
+    $node->uid = $row->uid;
+    $node->title = $row->title;
+    $node->sticky = 0;
+    $node->status = 1;
+
+    switch($row->notify) {
+      case 'Y':
+        $node->promote = 1;
+        break;
+      default: 
+        $node->promote = 0;
+        break;
+    }
+
+    node_save($node);
+
+  } // end foreach
+} // end function
+
+
