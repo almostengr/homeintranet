@@ -5,7 +5,6 @@
  */
 function intranetdata_update_7101() {
 
-
   $query = "select * from {eck_system_notification}";
   $result = db_query($query);
   
@@ -30,8 +29,41 @@ function intranetdata_update_7101() {
         break;
     }
 
+    $node = node_submit($node);
     node_save($node);
 
   } // end foreach
 } // end function
 
+function intranetdata_update_7102() {
+  $query = "select * from {eck_internet_connection_test}";
+  $results = db_query($query);
+
+  foreach($result as $row) {
+    $node = new stdClass();
+    $node->type = 'internet_speed_test';
+    node_object_prepare($node);
+    $node->title = $row->time_start;
+    $node->created = $row->created;
+    $node->uid = $row->uid;
+    $node->status = 0;
+    $node->changed = $row->created;
+    $node->comment = 0;
+    $node->promoted = 0;
+    $node->sticky = 0;
+    $node->field_inet_server_id['und'][0]['value'] = $row->server_id;
+    $node->field_inet_sponsor['und'][0]['value'] = $row->sponsor;
+    $node->field_inet_server['und'][0]['value'] = $row->server;
+    $node->field_inet_server_distance['und'][0]['value'] = $row->distance;
+    $node->field_inet_server_ping['und'][0]['value'] = $row->server_ping;
+    $node->field_inet_download['und'][0]['value'] = $row->download;
+    $node->field_inet_upload['und'][0]['value'] = $row->upload;
+    $node->field_inet_from['und'][0]['value'] = $row->tested_from_isp;
+    $node->field_inet_from_ip['und'][0]['value'] = $row->test_from_ip_addr;
+    $node->field_inet_share_url['und'][0]['value'] = $row->share_url_img;
+    $node->filed_dates['und'][0]['value'] = $row->time_start;
+   
+    $node = node_submit($node);
+    node_save($node);
+  } // end foreach
+} // end function
