@@ -7,7 +7,6 @@ sites/*/private
 sites/*/*settings*.php
 
 # Ignore default text files
-robots.txt
 CHANGELOG.txt
 COPYRIGHT.txt
 INSTALL*.txt
