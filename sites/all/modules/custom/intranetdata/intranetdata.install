@@ -3,7 +3,7 @@
  *
  * Move the System Notification entity to a Node entity
  */
-function intranetdata_update_7100() {
+function intranetdata_update_7101() {
 
 
   $query = "select * from {eck_system_notification}";
@@ -34,5 +34,4 @@ function intranetdata_update_7100() {
 
   } // end foreach
 } // end function
-
 
