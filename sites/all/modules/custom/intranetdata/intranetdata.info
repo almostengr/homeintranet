@@ -2,7 +2,7 @@ name = Intranet Data
 description = Moves intranet data from one entity or system to another.
 package = Almost Engrd
 core = 7.x
-version = 7.x-1.1
+version = 7.x-1.4
 
 dependencies[] = home_intranet
 dependencies[] = node 
