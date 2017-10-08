@@ -159,4 +159,41 @@ function intranetdata_update_7104() {
   $instances[] = field_info_instance('node', 'field_tix_due_date', 'pmissue');
 }
 
+/**
+ * 
+ * import knowledge solution nodes
+ */
+function intranetdata_update_proposed() {
+  $kbnids = array();
+  $transaction = db_transaction();
+ 
+  try{
+    db_set_active('helpdesk');
+
+    $query = "select nid from {node} where type in ('knowledge_article', 'knowledge_solution')";
+    $result = db_query($query);
+
+    foreach($result as $row) {
+      $kbnids[] = $row->nid;
+    }
+
+    $kbnodes = node_load_multiple($kbnids);
+    foreach($kbnodes as $kbdoc) {      
+      db_set_active('default');
+      $kbdoc->nid = NULL;
+      $kbdoc->vid = NULL;
+      $kbdoc->is_new = TRUE;
+
+      $kbdoc = node_submit($kbdoc);
+      node_save($kbdoc);
+    }
+
+    db_set_active('default');
+  }
+  catch (Exception $e) {
+    $transaction->rollback();
+    db_set_active('default');
+    watchdog_exception('intranetdata', $e);
+  }
+}
 
