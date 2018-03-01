@@ -1,7 +1,7 @@
 #!/bin/bash 
 
-INTRANETDIR=/home/aphintranet/intranet
-INTRANETPDIR=/home/aphintranet/intranetp
+INTRANETDIR=/home/pintranet/intranet
+INTRANETPDIR=/home/pintranet/intranetp
 SCRIPTDIR=${INTRANETPDIR}/speedtest-cli
 FEEDDIR=${INTRANETPDIR}/feeds/inetspeed
 FEEDFILE=${FEEDDIR}"/"$(date +%Y%m%d%H%M%S)".csv"
