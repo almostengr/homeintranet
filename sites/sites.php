@@ -59,10 +59,10 @@ $sites['thepost.intranet'] = 'default';
 $sites['www.thepost.intranet'] = 'default';
 
 // intranet site test 
-$sites['blueprint.test.intranet'] = 'default';
-$sites['www.blueprint.test.intranet'] = 'default';
+$sites['blueprint.testintranet'] = 'defaulttest';
+$sites['www.blueprint.testintranet'] = 'defaulttest';
 
 // intranet site development
-$sites['blueprint.dev.intranet'] = 'default';
-$sites['www.blueprint.dev.intranet'] = 'default';
+$sites['blueprint.devintranet'] = 'defaultdev';
+$sites['www.blueprint.devintranet'] = 'defaultdev';
 
