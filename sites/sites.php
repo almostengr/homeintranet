@@ -58,7 +58,11 @@
 $sites['thepost.intranet'] = 'default';
 $sites['www.thepost.intranet'] = 'default';
 
-// farmos sites production
-$sites['thepost.farmosweb'] = 'farmos'; 
-$sites['www.thepost.farmosweb'] = 'farmosweb';
+// intranet site test 
+$sites['blueprint.test.intranet'] = 'default';
+$sites['www.blueprint.test.intranet'] = 'default';
+
+// intranet site development
+$sites['blueprint.dev.intranet'] = 'default';
+$sites['www.blueprint.dev.intranet'] = 'default';
 
