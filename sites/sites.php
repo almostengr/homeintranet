@@ -55,8 +55,8 @@
  */
 
 // intranet sites production
-$sites['thepost.intranet'] = 'default';
-$sites['www.thepost.intranet'] = 'default';
+$sites['thepost.intranet'] = 'thepost.intranet';
+$sites['www.thepost.intranet'] = 'thepost.intranet';
 
 // intranet site test 
 $sites['blueprint.testintranet'] = 'blueprint.testintranet';
