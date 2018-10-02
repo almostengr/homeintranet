@@ -54,11 +54,11 @@
  * @see http://drupal.org/documentation/install/multi-site
  */
 
-// intranet sites
+// intranet sites production
 $sites['thepost.intranet'] = 'default';
 $sites['www.thepost.intranet'] = 'default';
 
-// farmos sites
+// farmos sites production
 $sites['thepost.farmosweb'] = 'farmos'; 
 $sites['www.thepost.farmosweb'] = 'farmosweb';
 
