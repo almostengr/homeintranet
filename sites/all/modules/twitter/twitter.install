@@ -115,13 +115,6 @@ function twitter_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'entities' => array(
-        'type' => 'blob',
-        'not null' => FALSE,
-        'size' => 'big',
-        'serialize' => TRUE,
-        'description' => 'A serialized array of {twitter} post entities.',
-      ),
     ),
     'primary key' => array('twitter_id'),
     'indexes' => array(
@@ -451,26 +444,17 @@ function twitter_update_7500() {
 }
 
 /**
- * Updates twitter_search variable to point to https://twitter.com/
+ * Skipped to match the 7.x-5.x branch. This was originally from
+ * https://www.drupal.org/node/2138341 which is not relevant to the 7.x-6.x
+ * branch.
  */
-function twitter_update_7501(&$sandbox) {
-  variable_set('twitter_search', 'https://twitter.com/');
-}
+function twitter_update_7501() {}
 
 /**
- * Add entities field to the twitter post table.
+ * Skipped to match the 7.x-5.x branch. This was originally from
+ * https://www.drupal.org/node/1936598 and will need to be backported.
  */
-function twitter_update_7502(&$sandbox) {
-  if (!db_field_exists('twitter', 'entities')) {
-    db_add_field('twitter', 'entities', array(
-      'type' => 'blob',
-      'not null' => FALSE,
-      'size' => 'big',
-      'serialize' => TRUE,
-      'description' => 'A serialized array of {twitter} post entities.',
-    ));
-  }
-}
+function twitter_update_7502() {}
 
 /**
  * Update the twitter_id column to a big int, rather than a float-type value.

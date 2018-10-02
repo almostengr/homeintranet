@@ -105,7 +105,7 @@ function twitter_signin_redirect() {
   // Specify a callback_url when generating our token that will match the
   // current domain.
   $oauth_callback = variable_get('twitter_oauth_callback_url', TWITTER_OAUTH_CALLBACK_URL);
-  $callback_url =  url($oauth_callback, array('absolute' => TRUE));
+  $callback_url = url($oauth_callback, array('absolute' => TRUE));
   $params = array('oauth_callback' => $callback_url);
   $token = $twitter->get_request_token($params);
 
@@ -192,20 +192,19 @@ function twitter_signin_oauth_callback_submit(&$form, &$form_state) {
     // No existing user account, let's see if we can register.
     elseif (variable_get('twitter_signin_register', 0)) {
       // Check for a nickname collision.
-      $accounts = user_load_multiple(array(), array('name' => $response['screen_name']));
-      $account = array_shift($accounts);
+      $users = user_load_multiple(array(), array('name' => $response['screen_name']));
+      $account = array_shift($users);
       if (empty($account->uid)) {
         // Generate a random password.
         require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
         $password = user_password();
 
         // Create a new user account object.
-        $account = new stdClass;
+        $account = new stdClass();
         $account->name = $response['screen_name'];
-        $account->pass = user_hash_password($password);
+        $account->pass = $password;
         $account->init = $response['screen_name'];
         $account->status = 1;
-        $account->timezone = variable_get('date_default_timezone', '');
         $account->authname_twitter = $response['user_id'];
         $account->access = REQUEST_TIME;
         $account->is_new = TRUE;
@@ -308,7 +307,7 @@ function _twitter_signin_add_account($edit, $account) {
     }
     $twitter_account->set_auth($response);
     $twitter_account->uid = $account->uid;
-    twitter_account_save($twitter_account, TRUE);
+    twitter_account_save($twitter_account);
 
     unset($_SESSION['twitter']);
     drupal_set_message(t('You have related a Twitter account with your user. Next time you can sign in with Twitter.'));

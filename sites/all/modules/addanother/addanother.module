@@ -199,6 +199,11 @@ function addanother_node_form_submit($form, &$form_state) {
     _addanother_quelch_message($node);
     theme('addanother_button_message', array('nid' => $node->nid));
 
+    // If there is a destination parameter, keep it for next cycle.
+    if (isset($_GET['destination'])) {
+      $_GET['destination'] = url(_addanother_node_add_path($node), array('query' => array('destination' => $_GET['destination'])));
+    }
+
     $form_state['redirect'] = _addanother_node_add_path($node);
   }
 }

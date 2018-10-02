@@ -1,95 +1,75 @@
-Twitter 7.x-5.11, 2015-10-05
-----------------------------
-#2565907 by anbuece: Undefined variable in twitter_post_field_extra_fields().
-#2567021 by Andy_D: Missing variables for tweet display via Views.
+Twitter 7.x-6.2, 2015-10-05
+---------------------------
 #2544672 by gurvan: Fixed the classes added to embedded links to match what is
   recommended/required by the Twitter API.
+#2580175 by kenwest, DamienMcKenna: Wasn't saving is_global account option.
+#2580185 by kenwest, DamienMcKenna: Twitter Post form didn't load existing
+  value.
 
 
-Twitter 7.x-5.10, 2015-09-04
-----------------------------
-#2560911 by mkolar: Regression to custom OAuth path functionality.
+Twitter 7.x-6.1, 2015-09-04
+---------------------------
 #2561255 by DamienMcKenna: Fixes for tests.
 #2561609 by DamienMcKenna: Fixed wrong function used to load a user object.
 
 
-Twitter 7.x-5.9, 2015-08-30
+Twitter 7.x-6.0, 2015-08-30
 ---------------------------
-#2005516 by Elijah Lynn: Fix invalid arg to foreach @
-  admin/config/services/twitter/post.
-#2182945 by alexdmccabe, jacobsdan, juampy: Update search to Twitter API v1.1.
+#1963524 by Sheldon Rampton: Fixed search_tweets() method not working in
+  Twitter API library.
 #2015965 by Jaypan, juampy: Twitter settings page cannot be overridden.
-By juampy: Improved the error message when a Twitter account is not set for
-  drush tws.
-#2068649 by VladimirAus, psacc, juampy: Failed status updates triggered by rules
-  actions show a success message.
-#2068649 by VladimirAus, psacc, juampy: Twitter API exceptions now bubble up.
-#2135743 by juampy: Fixed logic to avoid PHP warnings when signing in with a
-  Twitter acount.
-#2135743 by divadu, juampy: User password not encrypted.
-#1936598 by recrit, hughworm, juampy: Add support for tweet images.
-#2055951 by leewillis77: BIGINT issues with Twitter data storage.
-#1637380 by peterpoe: Warning and notices in
-  twitter_signin_oauth_callback_submit().
+#2142177 by kevinchampion: Fixed API function not invoked:
+  hook_twitter_status_save.
 By DamienMcKenna: Initial CHANGELOG.txt file.
 #2402317 by helmo: A permission was renamed which caused tests to fail.
-#2369833 by Jorrit: twitter_twitter_accounts() shouldn't return any accounts
-  for the anonymous user.
+#2369833 by Jorrit, baldwinlouie: twitter_twitter_accounts() shouldn't return
+  any accounts for the anonymous user.
 #2337219 by dysproseum: Update 7400 fails if the 'mentions' field already
   exists.
-#604530 by DamienMcKenna: Implement hook_field_extra_fields() so the Twitter
-  Post fieldset on node forms can be controlled.
-#2457169 by DamienMcKenna: Allow Twitter Post option to be controlled via the
-  content type edit form.
 #1884064 by jgSnell, e0ipso: Link path to configure is wrong in
   hook_requirements().
-#2402317 by DamienMcKenna, helmo: (temporarily) Fixed the 7.x-5.x branch tests.
+#2402321 by DamienMcKenna, helmo: (temporarily) Fixed the 7.x-6.x branch tests.
 #2205277 by AdamPS: Do not convert in_reply_to_user_id field to integer when it
   must allow larger values.
 #1996606 by rdtome: [screen_name] token in Views display not available for use
   with the "name" field.
-#1929126 by colin_vanarts, leewillis77, AdamPS, DamienMcKenna: Store the entire
-  message for retweets.
-#1985708 by DamienMcKenna, ingaro: Internal API incorrectly assumed numeric
-  screen names were actually account IDs.
-#1895320 by Drave Robber, DamienMcKenna: Update API documentation for
-  hook_twitter_account_save().
+#2139117 by maximpodorov: Don't assume all entity forms have fields.
+#1895320 by DamienMcKenna: Remove mention of hook_twitter_account_save() from
+  the API docs as the hook was removed.
+#2055951 by xurizaemon, leewillis77, drupal_jon, DamienMcKenna: Change the
+  twitter_id field to a BIGINT field, to allow room for Twitter's larger-than-
+  32bit unique IDs.
 #1943728 by frankdk, plopesc: Some text strings weren't translated.
 #969454 by caligari, DamienMcKenna: New text-only option for Twitter signin
   button.
 #1899594 by Jaypan: Change login element into a render array.
-#1825680 by lyricnz, DamienMcKenna: Add width/height attributes to the profile
-  images.
+#1825680 by lyricnz, DamienMcKenna: Add width/height attributes to the
+  profile images.
 #2354555 by Owen Barton: Tweets should place alt text on img, not link.
-#1929126 by DamienMcKenna: Remove redundant RT: bit from retweets.
-#1929126 by AdamPS, DamienMcKenna: Fix RT text.
-#2022485 by Elijah Lynn: Improve status message upon posting to Twitter.
-#2322683 by DamienMcKenna: Add Twitter to node extra fields list.
-By DamienMcKenna: Misspelling of "Twitter" in twitter.pages.inc.
+#2022485 by DamienMcKenna, Elijah Lynn: Improve status message upon posting to
+  Twitter.
+#2485211 by crazydrake: Misspelling of "Twitter" in twitter_post.field.inc.
 #1642522 by cinnamon, digitalhorde, stimalsina, DamienMcKenna: Protocol-relative
-  URLs for profile images.
-#2546622 by DamienMcKenna: Undefined index error when adding non-authenticated
-  account.
+  URLs for profile images."
 #1970498 by nielsonm, arcovia, DamienMcKenna: Only allow users to tweet using
   global or their personal accounts.
 #1970498 by DamienMcKenna: Fixed the post logic.
-#2546686 by DamienMcKenna: Use FormAPI states logic to hide/show Post fields.
-#2395609 by DamienMcKenna: Custom Panels pane for submitting tweets.
 #652680 by steinmb, DamienMcKenna: Don't assume user registration is successful.
+#2546686 by DamienMcKenna: Use FormAPI states logic to hide/show Post fields.
 #2378081 by nicrodgers, DamienMcKenna: users_show() only accepts a screen name.
+#1971744 by DamienMcKenna: Use popup dialog for token browser.
 #2042053 by InternetDevels: Allow translation of the "characters remaining"
   phrase in the Twitter Post module.
 #2403717 by dysproseum, DamienMcKenna: Catch any Twitter API request errors.
 #1967798 by DamienMcKenna: Updated README.txt to explain about the OAuth reqs.
-#1943398 by nwehner, tanc, DamienMcKenna: Truncate !title token to prevent the
-  tweet submission failing.
 #2548093 by DamienMcKenna: Fixed incorrect variable name in try-catch block.
-#2169609 by recrit: Moved some theming logic outside of Views handler so the
-  theming works better.
+#2548093 by DamienMcKenna: Note in the post field description that the maximum
+  length for at tweet is 117 chars when a URL is included.
+#2169609 by recrit, DamienMcKenna: Moved some theming logic outside of Views
+  handler so the theming works better.
 #2054761 by pobster: Added a Views user/twitter table relationship.
 #2040901 by jamiehollern: Allow mentions for unknown users.
 #2212407 by DamienMcKenna, jonhines: Tie non-auth accounts to the correct user.
-#2084729 by DamienMcKenna: twitter_connect() shouldn't list non-authed users.
 #1902780 by DamienMcKenna: Removed the dependency on Views, it's optional.
 #2032057 by DamienMcKenna, Verban: Check a few values to see if the screen name
   can be identified for the Follow field.
@@ -109,8 +89,6 @@ By DamienMcKenna: Misspelling of "Twitter" in twitter.pages.inc.
   the {twitter}.text field is stored as a blob.
 #1878660 by DamienMcKenna: Don't show the login/registration form options if the
   API keys haven't been saved yet.
-#2430229 by DamienMcKenna, sumitmadan: By default don't re-post tweets on nodes
-  that are already published, but give an option to change this.
 #1886540 by DamienMcKenna: By default don't allow logins when the site is in
   maintenance mode, but give sites the option to allow it.
 #2338125 by durum: Fixed permission check for adding non-authenticated accounts.
@@ -122,6 +100,9 @@ By DamienMcKenna: Misspelling of "Twitter" in twitter.pages.inc.
   user_login_finalize() to ensure hook_user_login is triggered correctly.
 #2143605 by kladrian, DamienMcKenna: Reload the user object after logging in to
   ensure a full user object is passed along to the various hooks.
+#1929126 by colin_vanarts, leewillis77, AdamPS, DamienMcKenna: Store the entire
+  message for retweets.
+#2553107 by DamienMcKenna: Ported Drush improvements from 7.x-5.x.
 #2214867 by DamienMcKenna: Added index on {twitter}.created_time.
 #1911494 by DamienMcKenna, Sheldon Rampton: Don't assume twitter_connect() works
   every time, identify failures.
@@ -132,7 +113,6 @@ By DamienMcKenna: Misspelling of "Twitter" in twitter.pages.inc.
   with other HTML.
 #2222837 by rahulbile, DamienMcKenna: New permission for controlling settings.
 #2119759 by djac, DamienMcKenna: Add index on {twitter_account}.uid.
-#2022561 by Elijah Lynn: Return the status message in hook_node_insert/update.
 #2544672 by gurvan, DamienMcKenna: Add classes to linked inserted by the text
   filters.
 #1648970 by DamienMcKenna, HaloFX, wouters_f: Optionally hide the Twitter button
@@ -143,19 +123,22 @@ By DamienMcKenna: Misspelling of "Twitter" in twitter.pages.inc.
 #2357921 by mkolar, DamienMcKenna: Allow the OAuth callback URL to be changed.
 #2403315 by DamienMcKenna: Custom field type for displaying the most recent
   tweet by a specific user.
-#2403315 by DamienMcKenna: Follow-up to finish renaming the
-  twitter_account_load_all function to twitter_load_accounts() to match v6.
 #1890926 by Drave Robber, DamienMcKenna: Drush command for posting tweets.
 #940060 by Jon Pugh, univate, justondoge, DamienMcKenna: Pass the current domain
   when authenticating.
 #1974102 by kerasai, hussainweb, DamienMcKenna: Rename tweet.tpl.php to match
   theme hook.
 #1890926 by DamienMcKenna: Fixes to the Drush 'tweet' command.
-#2556013 by DamienMcKenna: Ensure the 'post' option is respected on new content.
 #2239041 by DamienMcKenna: Replaced all http:// URLs with https:// ones.
 #2556611 by DamienMcKenna: New permission for controlling who has access to
   post using a global account.
 #2556011 by DamienMcKenna: Updated the README.txt file.
+#2557757 by DamienMcKenna: Hide fields if the 'announce' checkbox is unchecked.
+#2557783 by DamienMcKenna: Field schema was broken, wasn't saving anything.
+#2557773 by DamienMcKenna: Posting didn't work when using EntityTranslation.
+#2461937 by DamienMcKenna: Field widget improvements, don't post when editing
+  content that's already published.
+#2559129 by DamienMcKenna: Fixed error when only one account to post from.
 #2558457 by DamienMcKenna: Additional logging during cron.
 #2559153 by DamienMcKenna: Incorrect use of user_load() when posting tweets.
 #2559239 by DamienMcKenna: Fixed embedded tweets, other functionality after
@@ -164,16 +147,24 @@ By DamienMcKenna: Misspelling of "Twitter" in twitter.pages.inc.
   new-user password message.
 
 
-Twitter 7.x-5.8, 2013-06-03
----------------------------
+Twitter 7.x-6.0-alpha2, 2013-03-13
+----------------------------------
+#1933908 by mfernea: Fix urls in admin interface.
+#1924808 by Jos Doekbrijder, hermes_costell: Fixed Twitter accounts table is
+  skewed.
+#1934768 by barry6575: Fixed Twitter Post issue.
+#1944174 by yanniboi | Jennifer Norell: Error with Web Intents field.
+#1924478 by botanic_spark | k9kiko: Invalid Twitter OAuth request.
+By juampy: Fixed bug when saving whether to save mentions or not.
+By juampy: Added twitter_account_save() so it takes care of setting is_new
+  property.
+#1973470 by xopoc: Fixed Import and views handler bugs.
+By juampy: Removed debug statements.
 
 
-Twitter 7.x-5.7, 2013-04-11
----------------------------
-
-
-Twitter 7.x-5.6, 2013-05-12
----------------------------
+Twitter 7.x-6.0-alpha1, 2013-03-13
+----------------------------------
+#1895274 by juampy: Turn tweets and twitter accounts into entities.
 
 
 Twitter 7.x-5.5, 2013-02-02

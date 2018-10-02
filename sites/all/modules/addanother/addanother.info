@@ -8,9 +8,9 @@ files[] = addanother.test
 configure = admin/structure/types/addanother
 
 
-; Information added by Drupal.org packaging script on 2014-05-10
-version = "7.x-2.2"
+; Information added by Drupal.org packaging script on 2016-11-21
+version = "7.x-2.3-rc1"
 core = "7.x"
 project = "addanother"
-datestamp = "1399687140"
+datestamp = "1479707641"
 

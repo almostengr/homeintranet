@@ -168,77 +168,17 @@ class twitter_views_handler_field_formatted_tweet extends views_handler_field {
     module_load_include('inc', 'twitter');
 
     // Load tweet and author.
-    $status = twitter_status_load($values->twitter_id);
-    $author = twitter_account_load($status->screen_name, FALSE);
+    $twitter_status = entity_load_single('twitter_status', $values->twitter_id);
+    $twitter_account = entity_load('twitter_account', FALSE, array('screen_name' => $twitter_status->screen_name));
+    $twitter_account = reset($twitter_account);
 
     // Render the tweet.
     return theme('twitter_status', array(
-      'status' => $status,
-      'author' => $author,
+      'status' => $twitter_status,
+      'author' => $twitter_account,
       'reply' => t('Reply'),
       'retweet' => t('Retweet'),
       'favorite' => t('Favorite'),
     ));
-  }
-}
-
-/**
- * Renders the image attached to a tweet.
- */
-class twitter_views_handler_field_image extends views_handler_field {
-
- /**
-   * Default options form.
-   */
-  function option_definition() {
-    $options = parent::option_definition();
-
-    $options['size'] = array('default' => 'thumb');
-
-    return $options;
-  }
-
-  /**
-   * Creates the form item for the options added.
-   */
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
-
-    $form['size'] = array(
-      '#type' => 'select',
-      '#title' => t('Image size'),
-      '#default_value' => $this->options['size'],
-      '#options' => array(
-        'thumb'  => t('Thumb'),
-        'small'  => t('Small'),
-        'medium' => t('Medium'),
-        'large'  => t('Large'),
-      ),
-      '#description' => t('Choose an image size from the ones that Twitter has created for this image.'),
-      '#weight' => -10,
-    );
-  }
-
-  /**
-   * Renders the image.
-   */
-  function render($values) {
-    if (!empty($values->twitter_entities) && is_string($values->twitter_entities)) {
-      $entities = unserialize($values->twitter_entities);
-
-      // Loop over the tweet entities and render the image if it is present.
-      if (!empty($entities['media']) && is_array($entities['media'])) {
-        foreach ($entities['media'] as $media) {
-          if (($media['type'] == 'photo') && !empty($media['media_url'])) {
-            $image_path = $GLOBALS['is_https'] ? $media['media_url_https'] : $media['media_url'];
-            $image_path .= ':' . $this->options['size'];
-            return theme('image', array(
-              'path' => $image_path,
-              'attributes' => array('class' => 'tweet-image'),
-            ));
-          }
-        }
-      }
-    }
   }
 }

@@ -50,6 +50,7 @@ These filters are avilable when configuring list of tweets in Views.
 Note: These filters may be used without OAuth being configured.
 
 
+
 How to post to Twitter
 --------------------------------------------------------------------------------
  1. Install and configure OAuth, as described above.
@@ -62,8 +63,11 @@ How to post to Twitter
       Users with this permission will be able to post to Twitter using an
       account that is set up with the "is global" option.
 
- 3. Go to admin/config/services/twitter/post and select from which node types a
-    user may post to Twitter, and the default message that will be posted.
+ 3. Go to the "Manage fields" page for a content type, or other entity (taxonomy
+    terms, etc), that is to be used to notify Twitter. Add a new field by
+    filling in a field name, selecting "Twitter" as the field type and "Post to
+    Twitter" as the field widget, and clicking "Save". Fill in the default
+    string to be used when posting new tweets and click "Save".
 
  4. Add a Twitter account and try to edit or post content.
 
