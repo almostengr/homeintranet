@@ -1,0 +1,428 @@
+<?php
+/**
+ * @file
+ * Code for the Farm Area feature.
+ */
+
+include_once 'farm_area.features.inc';
+
+/**
+ * Implements hook_hook_info().
+ */
+function farm_area_hook_info() {
+  $hooks['farm_area_details'] = array(
+    'group' => 'farm_area',
+  );
+  $hooks['farm_area_type_info'] = array(
+    'group' => 'farm_area',
+  );
+  return $hooks;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function farm_area_permission() {
+  return array(
+    'view farm areas' => array(
+      'title' => t('View farm areas'),
+      'description' => t('View all areas in the farm.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_farm_access_perms().
+ */
+function farm_area_farm_access_perms($role) {
+  $perms = array();
+
+  // Add the "view farm areas" permission to all roles.
+  $perms[] = 'view farm areas';
+
+  return $perms;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function farm_area_menu() {
+  $items['farm/area/%/details'] = array(
+    'page callback' => 'farm_area_details_json',
+    'page arguments' => array(2),
+    'access arguments' => array('view farm areas'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_farm_ui_entities().
+ */
+function farm_area_farm_ui_entities() {
+  return array(
+    'taxonomy_term' => array(
+      'farm_areas' => array(
+        'label' => t('Area'),
+        'label_plural' => t('Areas'),
+        'view' => 'farm_areas',
+      ),
+    ),
+  );
+}
+
+/**
+ * Get information about all available area types.
+ */
+function farm_area_types() {
+
+  // Get available types from modules.
+  $area_types = module_invoke_all('farm_area_type_info');
+
+  // Iterate through the types and create an index by weight.
+  $weight_index = array();
+  foreach ($area_types as $key => $type) {
+
+    // Default weight is zero.
+    if (empty($type['weight'])) {
+      $type['weight'] = 0;
+    }
+
+    // Add it to the weight index array.
+    $weight_index[$key] = $type['weight'];
+  }
+
+  // Sort the weight index array.
+  asort($weight_index);
+
+  // Iterate through the weight index to build the final sorted list.
+  $area_types_sorted = array();
+  foreach ($weight_index as $key => $weight) {
+    $area_types_sorted[$key] = $area_types[$key];
+  }
+
+  // Return the sorted list.
+  return $area_types_sorted;
+}
+
+/**
+ * Get an array of available farm area type options.
+ *
+ * @return array
+ *   Returns an array of farm area type options provided by modules, for use
+ *   in a form select element.
+ */
+function farm_area_type_options() {
+
+  // Start with an empty options array.
+  $options = array();
+
+  // Get available types from modules.
+  $area_types = module_invoke_all('farm_area_type_info');
+
+  // Iterate through the weight index to build the final options list.
+  foreach ($area_types as $key => $type) {
+    if (!empty($type['label'])) {
+      $options[$key] = $type['label'];
+    }
+  }
+
+  // Return the list of options.
+  return $options;
+}
+
+/**
+ * Load a list of areas (optionally by type).
+ *
+ * @param $type
+ *   Optionally specify an area type to filter by.
+ * @param $sort
+ *   Optionally specify the property to sort by. Defaults to 'id'.
+ *
+ * @return array
+ *   Returns an array of areas.
+ */
+function farm_area_load_areas($type = '', $sort = 'id') {
+
+  // Start with an empty array.
+  $areas = array();
+
+  // Start an entity field query for terms in the farm_areas vocabulary.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'taxonomy_term')
+    ->entityCondition('bundle', 'farm_areas');
+
+  // If the $sort argument is 'id', translate it to 'tid' (remove this if/when
+  // areas become assets (see https://www.drupal.org/node/2363393).
+  if ($sort == 'id') {
+    $sort = 'tid';
+  }
+
+  // Sort the results.
+  $query->propertyOrderBy($sort, 'ASC');
+
+  // If a type is defined, add a field condition to filter by that type.
+  if (!empty($type)) {
+    $query->fieldCondition('field_farm_area_type', 'value', $type);
+  }
+
+  // Execute the query and load the areas.
+  $result = $query->execute();
+  if (isset($result['taxonomy_term'])) {
+    $area_ids = array_keys($result['taxonomy_term']);
+    $areas = entity_load('taxonomy_term', $area_ids);
+  }
+
+  // Return the areas.
+  return $areas;
+}
+
+/**
+ * Generate area details.
+ *
+ * @param int $id
+ *   The area id.
+ *
+ * @return string
+ *   Returns a string of links.
+ */
+function farm_area_get_details($id) {
+
+  // Call out to modules that want to provide links.
+  $area_details = module_invoke_all('farm_area_details', check_plain($id));
+
+  // Render and return.
+  return drupal_render($area_details);
+}
+
+/**
+ * Menu callback that returns rendered area details as JSON.
+ */
+function farm_area_details_json($aid) {
+  $area_details = farm_area_get_details($aid);
+  drupal_json_output($area_details);
+  drupal_exit();
+}
+
+/**
+ * Implements hook_openlayers_object_preprocess_alter().
+ */
+function farm_area_openlayers_object_preprocess_alter(&$build, $context) {
+
+  // If the object is not a Map, bail.
+  if (!$context instanceof Drupal\openlayers\Types\MapInterface) {
+    return;
+  }
+
+  // If this is the farm_areas map, add area details javascript.
+  if ($context->getMachineName() == 'farm_areas') {
+
+    // Add a Javascript setting that defines the base path of the site.
+    // We do this instead of using Drupal.settings.basePath in Javascript
+    // because that variable does not take into account whether or not clean
+    // URLs are enabled.
+    $setting = array(
+      'farm_area' => array(
+        'base_path' => url('farm/area'),
+      ),
+    );
+    drupal_add_js($setting, 'setting');
+
+    // Add the Javascript for lazy loading area details.
+    $path = drupal_get_path('module', 'farm_area');
+    drupal_add_js($path . '/js/farm_area.openlayers.popup.js');
+  }
+}
+
+/**
+ * Implements hook_page_build().
+ */
+function farm_area_page_build(&$page) {
+
+  // If the user doesn't have access to view farm areas, bail.
+  if (!user_access('view farm areas')) {
+    return;
+  }
+
+  // If this is the farm dashboard, display the areas map.
+  $current_path = current_path();
+  $map_paths = array(
+    'farm',
+    'farm/dashboard',
+    'farm/areas',
+    'farm/areas/list',
+  );
+  if (in_array($current_path, $map_paths)) {
+
+    // Build the map and add it to the page content.
+    $page['content']['farm_areas'] = farm_map_build('farm_areas');
+
+    // Set the weight to -100 so that it appears on top.
+    $page['content']['farm_areas']['#weight'] = -100;
+
+    // Set the content region #sorted flag to FALSE so that it resorts.
+    $page['content']['#sorted'] = FALSE;
+  }
+}
+
+/**
+ * Helper function to extract geometries from areas.
+ *
+ * @param array $ids
+ *   An array of area term IDs.
+ *
+ * @return array
+ *   Returns an array of geometry strings in WKT format.
+ */
+function farm_area_extract_geoms($ids = array()) {
+
+  // Start an empty array of geometries to return.
+  $geoms = array();
+
+  // If the array of IDs is empty, bail.
+  if (empty($ids)) {
+    return $geoms;
+  }
+
+  // Load the areas.
+  $areas = array();
+  foreach ($ids as $id) {
+    if ($area = taxonomy_term_load($id)) {
+      $areas[] = $area;
+    }
+  }
+
+  // If no areas are referenced, bail.
+  if (empty($areas)) {
+    return $geoms;
+  }
+
+  // Iterate over the areas to find geometries.
+  $geoms = array();
+  foreach ($areas as $area) {
+    if (!empty($area->field_farm_geofield[LANGUAGE_NONE])) {
+      foreach ($area->field_farm_geofield[LANGUAGE_NONE] as $geofield) {
+        if (!empty($geofield['geom'])) {
+          $geoms[] = $geofield['geom'];
+        }
+      }
+    }
+  }
+
+  // Return the geometries.
+  return $geoms;
+}
+
+/**
+ * Calculate the area of a farm area.
+ *
+ * @param $area_id
+ *   The area id to load.
+ *
+ * @return string
+ *   Returns the calculated are of the area as a string, in meters squared.
+ */
+function farm_area_calculate_area($area_id) {
+
+  // Load the area.
+  $area = taxonomy_term_load($area_id);
+
+  // If the area doesn't exist, bail.
+  if (empty($area)) {
+    return '';
+  }
+
+  // Get WKT from the field. If empty, bail.
+  if (!empty($area->field_farm_geofield[LANGUAGE_NONE][0]['geom'])) {
+    $geom = $area->field_farm_geofield[LANGUAGE_NONE][0]['geom'];
+  }
+  else {
+    return '';
+  }
+
+  // Load the WKT into a GeoPHP Geometry object and reduce it.
+  geophp_load();
+  $polygon = geoPHP::load($geom, 'wkt');
+  $polygon = geoPHP::geometryReduce($polygon);
+
+  // Ensure that it is a simple polygon.
+  if ($polygon->geometryType() != 'Polygon') {
+    return '';
+  }
+
+  // Calculate the area in square meters.
+  $measurement = farm_map_polygon_area($polygon);
+
+  // Format the area in the default system of measure, and return it as a string.
+  return farm_area_format_calculated_area($measurement);
+}
+
+/**
+ * Format a calculated area in the default system of measurement.
+ *
+ * @param int|float $measurement
+ *   The measurement of area to format.
+ *
+ * @return string
+ *   Returns a formatted string.
+ */
+function farm_area_format_calculated_area($measurement) {
+
+  // If the measurement is empty or not a number, return an empty string.
+  if (empty($measurement) || !is_numeric($measurement)) {
+    return '';
+  }
+
+  // Get the system of measurement.
+  $unit_system = farm_quantity_system_of_measurement();
+
+  // Switch through available unit systems and generate a formatted string.
+  $conversion = '';
+  $unit = '';
+  switch ($unit_system) {
+
+    // Metric:
+    case 'metric':
+
+      // Convert to hectares.
+      $conversion = '0.0001';
+      $unit = 'hectares';
+
+      // If it is less than 0.25 hectares, use square meters instead.
+      if ($measurement * $conversion < 0.25) {
+        $conversion = '1';
+        $unit = 'square meters';
+      }
+      break;
+
+    // US/Imperial:
+    case 'us':
+
+      // Convert to acres.
+      $conversion = '0.000247105';
+      $unit = 'acres';
+
+      // If it is less than 0.25 acres, use square feet instead.
+      if ($measurement * $conversion < 0.25) {
+        $conversion = '10.7639';
+        $unit = 'square feet';
+      }
+      break;
+  }
+
+  // If a unit and conversion were not found, bail.
+  if (empty($unit) || empty($conversion)) {
+    return '';
+  }
+
+  // Convert to the desired units.
+  if (function_exists('bcmul')) {
+    $measurement = bcmul($measurement, $conversion);
+  }
+  else {
+    $measurement = $measurement * $conversion;
+  }
+
+  // Format and return.
+  return (string) round($measurement, 2) . ' ' . $unit;
+}
