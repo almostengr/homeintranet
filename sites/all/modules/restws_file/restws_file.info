@@ -1,0 +1,10 @@
+name = RESTful web services support for files and images
+description = Support for creating and updating files and images as base64-encoded strings.
+core = "7.x"
+
+dependencies[] = restws (>=2.3)
+
+; Information added by drush on 2017-02-10
+version = "7.x-1.2+2-dev"
+project = "restws_file"
+datestamp = "1486724435"

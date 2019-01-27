@@ -1,0 +1,20 @@
+name = "Openlayers"
+description = "Openlayers base API module"
+core = 7.x
+php = 5.3.10
+package = "Openlayers"
+
+dependencies[] = libraries
+dependencies[] = file
+dependencies[] = image
+dependencies[] = service_container
+dependencies[] = service_container:service_container_symfony
+dependencies[] = service_container:service_container_annotation_discovery
+dependencies[] = jquery_update
+
+registry_autoload[] = PSR-4
+
+; Information added by drush on 2018-03-01
+version = "7.x-3.1+92-dev"
+project = "openlayers"
+datestamp = "1519868588"
