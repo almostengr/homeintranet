@@ -1,0 +1,12 @@
+name = Farm API
+description = Extends the RESTful Web Services module to provide farmOS-specific APIs.
+core = 7.x
+package = farmOS
+dependencies[] = restws
+dependencies[] = restws_file
+
+; Information added by Drupal.org packaging script on 2019-01-16
+version = "7.x-1.0-rc2"
+core = "7.x"
+project = "farm"
+datestamp = "1547665844"
