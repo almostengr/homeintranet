@@ -1,0 +1,11 @@
+name = Farm Crop Area Types
+description = Provides default area types for crop management: Bed, Greenhouse.
+core = 7.x
+package = farmOS
+dependencies[] = farm_area
+
+; Information added by Drupal.org packaging script on 2019-01-16
+version = "7.x-1.0-rc2"
+core = "7.x"
+project = "farm"
+datestamp = "1547665844"

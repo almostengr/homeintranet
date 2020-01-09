@@ -1,0 +1,14 @@
+name = "Openlayers UI"
+description = "Provides a user interface to manage Openlayers maps."
+core = "7.x"
+package = "Openlayers"
+dependencies[] = "openlayers"
+
+configure = admin/structure/openlayers
+
+registry_autoload[] = PSR-4
+
+; Information added by drush on 2018-03-01
+version = "7.x-3.1+92-dev"
+project = "openlayers"
+datestamp = "1519868588"

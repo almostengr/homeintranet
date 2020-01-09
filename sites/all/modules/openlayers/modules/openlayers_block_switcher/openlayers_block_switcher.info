@@ -1,0 +1,11 @@
+name = Openlayers Block Switcher
+description = Openlayers Block Switcher
+core = 7.x
+package = "Openlayers"
+
+dependencies[] = openlayers
+
+; Information added by drush on 2018-03-01
+version = "7.x-3.1+92-dev"
+project = "openlayers"
+datestamp = "1519868588"
